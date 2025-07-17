@@ -6,7 +6,7 @@
 /*   By: taewonki <taewonki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 13:58:08 by taewonki          #+#    #+#             */
-/*   Updated: 2025/07/17 16:40:33 by taewonki         ###   ########.fr       */
+/*   Updated: 2025/07/17 17:07:07 by taewonki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,11 @@ typedef struct	s_map
 
 //free_util.c
 void	free_grid(char **grid);
+void	free_visited(t_map *map);
 
 //maps_util.c
 void	init_maps(t_map *map);
+void	init_visited(t_map *map);
 int		add_line_to_grid(t_map *maps, char *new_line);
 
 //util.c
@@ -51,5 +53,7 @@ int	ft_strlen_gnl(char *line);
 //check.c
 void	read_map(int map_fd, t_map *map);
 
+//dfs.c
+void	dfs(int x, int y, t_map *map);
 
 #endif

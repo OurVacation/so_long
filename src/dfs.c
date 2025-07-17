@@ -1,53 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_util.c                                        :+:      :+:    :+:   */
+/*   dfs.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: taewonki <taewonki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/17 11:16:12 by taewonki          #+#    #+#             */
-/*   Updated: 2025/07/17 17:11:41 by taewonki         ###   ########.fr       */
+/*   Created: 2025/07/17 16:42:01 by taewonki          #+#    #+#             */
+/*   Updated: 2025/07/17 17:08:18 by taewonki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	free_grid(char **grid)
+void	dfs(int x, int y, t_map *map)
 {
-	int	i;
-
-	if (!grid)
-		return ;
-	i = -1;
-	while (grid[++i])
-	{
-		free(arr[i])
-	}
-	free(arr);
-}
-
-void	free_visited(t_map *map, int idx)
-{
-	int	y;
-
-	y = 0;
-	if (idx > 0)
-	{
-		while (y <= idx)
-		{
-			free(visited[y]);
-			y++;
-		}
-		free(map->visited);
-		return ;
-	}
-	else
-	{
-		while (y < map->height)
-		{
-			free(visited[y]);
-			y++;
-		}
-		free(map->visited);
-	}
+	init_visited(map);
 }
