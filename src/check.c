@@ -1,0 +1,103 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: taewonki <taewonki@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/09 14:28:18 by taewonki          #+#    #+#             */
+/*   Updated: 2025/07/17 15:31:05 by taewonki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "so_long.h"
+
+int		validate_border(t_map *map);
+int		validate_elements(t_map *map);
+
+int	read_map(int map_fd, t_map *map)
+{
+	char	*line;
+	int		check;
+	int		width;
+	int		i;
+
+	if (map_fd < 0 || !map)
+	{
+		ft_printf("check.c/check_maps() error\n");
+		return (-1);
+	}
+	init_maps(map);
+	while ((line = get_next_line(map_fd)) != NULL)
+	{
+		width = ft_strlen_gnl(line);
+		if (map->height == 0)
+			map->width = width;
+		if (width == 0)
+			return (free(line), free_grid(map->grid), -1);
+		if (map->width != ft_strlen_gnl(line))
+			return (free(line), free_grid(map->grid), -1);
+		add_line_to_grid(map, line);
+	}
+	return (close(map_fd), 0);
+}
+
+int	validation_map(t_map *map)
+{
+	if (validate_border(map)){}
+	if (validate_elements(map)){}
+	return (0);
+}
+
+int	validate_border(t_map *map)
+{
+	int	x;
+	int	y;
+
+	x = 0;
+	y = 0;
+	while (x < map->width)
+	{
+		if (map->grid[0][x] != '1' || map->grid[map->height - 1][x] != '1')
+			return (-1);
+		x++;
+	}
+	while (y < map->height)
+	{
+		if (map->grid[y][0] != '1' || map->grid[y][map->width - 1] != '1')
+			return (-1);
+		y++;
+	}
+	return (0);
+}
+
+int	validate_elements(t_map *map)
+{
+	int	x;
+	int	y;
+
+	y = -1;
+	while (++y < map->height)
+	{
+		x = -1;
+		while (++x < map->width)
+		{
+			if (map->grid[y][x] == 'C')
+				map->c_count++;
+			if (map->grid[y][x] == 'E')
+				map->e_count++;
+			if (map->grid[y][x] == 'P')
+			{
+				map->player_x = x;
+				map->player_y = y;
+				map->p_count++;
+			}
+			else if (map->grid[y][x] != '1' || map->grid[y][x] != '0')
+				return (ft_printf("invalid character!\n"), -1);
+		}
+	}
+	if (map->p_count != 1 || map->e_count != 1 || map->c_count < 1)
+		return (-1);
+}
+
+int	validate_route(t_map *map)
