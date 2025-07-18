@@ -12,8 +12,10 @@
 
 #include "so_long.h"
 
+int	    read_map(int map_fd, t_map *map);
 int		validate_border(t_map *map);
 int		validate_elements(t_map *map);
+int	    validate_route(t_map *map);
 
 int	read_map(int map_fd, t_map *map)
 {
@@ -44,9 +46,26 @@ int	read_map(int map_fd, t_map *map)
 
 int	validation_map(t_map *map)
 {
-	if (validate_border(map)){}
-	if (validate_elements(map)){}
-	return (0);
+
+    if (map->width < 3 || map->height < 3)
+    {
+        return (-1);
+    }
+	if (validate_border(map) == -1)
+    {
+        return (free_grid(map->grid), -1);
+    }
+	if (validate_elements(map) == -1)
+    {
+        return (free_grid(map->grid), -1);
+    }
+    init_visited(map);
+    if (validate_route(map) == -1)
+    {
+        return (free_grid(map->grid), free_visited(map), -1);
+    }
+    free_visited(map);
+	return (1);
 }
 
 int	validate_border(t_map *map)
@@ -84,16 +103,17 @@ int	validate_elements(t_map *map)
 		{
 			if (map->grid[y][x] == 'C')
 				map->c_count++;
-			if (map->grid[y][x] == 'E')
+			else if (map->grid[y][x] == 'E')
 				map->e_count++;
-			if (map->grid[y][x] == 'P')
+			else if (map->grid[y][x] == 'P')
 			{
 				map->player_x = x;
 				map->player_y = y;
 				map->p_count++;
 			}
-			else if (map->grid[y][x] != '1' || map->grid[y][x] != '0')
-				return (ft_printf("invalid character!\n"), -1);
+			else if (map->grid[y][x] != '1' && map->grid[y][x] != '0') {
+                return (ft_printf("invalid character!\n"), -1);
+            }
 		}
 	}
 	if (map->p_count != 1 || map->e_count != 1 || map->c_count < 1)
@@ -101,3 +121,12 @@ int	validate_elements(t_map *map)
 }
 
 int	validate_route(t_map *map)
+{
+    dfs(map->player_x, map->player_y, map);
+    if (map->found_c_cnt != map->c_count)
+        return (ft_printf("not match C count!\n"), -1);
+    else if (map->found_e_cnt != 1)
+        return (ft_printf("exit is 0 or more than 1\n"), -1);
+    else
+        return (1);
+}

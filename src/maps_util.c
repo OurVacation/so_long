@@ -27,33 +27,34 @@ void	init_maps(t_map *map)
 	map->p_count = 0;
 }
 
-int	init_visited(t_map *map, int idx)
+int	init_visited(t_map *map)
 {
-	int	**visited;
-	int	x;
-	int	y;
+    int	**visited;
+    int	x;
+    int	y;
 
-	visited = malloc(sizeof(int *) * map->height);
-	if (!visited)
-		return (ft_printf("init_visited() malloc failed!\n"), -1);
-	y = 0;
-	while (y < map->height)
-	{
-		x = 0;
-		visited[y] = malloc(sizeof(int) * map->width);
-		if (!visited[y])
-			return (free_visited(map, y), free_grid(map->grid), -1);
-		while (x < map->width)
-		{
-			if (map->grid[y][x] == '1')
-			{
-				visited[y][x] = 1;
-			}
-			x++;
-		}
-		y++;
-	}
-	map->visited = visited;
+    visited = malloc(sizeof(int *) * map->height);
+    if (!visited)
+        return (ft_printf("init_visited() malloc failed!\n"), -1);
+    y = 0;
+    while (y < map->height)
+    {
+        x = 0;
+        visited[y] = ft_calloc(map->width, sizeof(int));
+        if (!visited[y])
+            return (free_visited(map, y), -1);
+        while (x < map->width)
+        {
+            if (map->grid[y][x] == '1')
+            {
+                visited[y][x] = 1;
+            }
+            x++;
+        }
+        y++;
+    }
+    map->visited = visited;
+    return (0);
 }
 
 int	add_line_to_grid(t_map *maps, char *new_line)

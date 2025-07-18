@@ -14,5 +14,15 @@
 
 void	dfs(int x, int y, t_map *map)
 {
-	init_visited(map);
+    if (x < 0 || x >= map->width || y < 0 || y >= map->height || map->visited[y][x] == 1)
+        return ;
+    map->visited[y][x] = 1;
+    if (map->grid[y][x] == 'C')
+        map->found_c_cnt++;
+    if (map->grid[y][x] == 'E')
+        map->found_e_cnt++;
+    dfs(x - 1, y, map);
+    dfs(x + 1, y, map);
+    dfs(x, y - 1, map);
+    dfs(x, y + 1, map);
 }
