@@ -6,7 +6,7 @@
 /*   By: taewonki <taewonki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 15:57:58 by taewonki          #+#    #+#             */
-/*   Updated: 2025/07/20 14:59:15 by taewonki         ###   ########.fr       */
+/*   Updated: 2025/07/23 14:05:12 by taewonki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,33 @@ int		exit_hook(t_game *g);
 void	init_game_info(t_game *g)
 {
 	g->mlx_ptr = mlx_init();
+	if (g->mlx_ptr == NULL)
+		error_exit("mlx_init failed\n", g);
 	g->win_ptr = mlx_new_window(g->mlx_ptr, g->map.width * 64, \
 		g->map.height * 64, "so_long");
+	if (g->win_ptr == NULL)
+		error_exit("mlx_new_window() failed\n", g);
 	g->move_cnt = 0;
 	g->wall.img_ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
-		"../textures/wall.xpm", &g->wall.width, &g->wall.height);
+		WALL, &g->wall.width, &g->wall.height);
+	if (g->wall.img_ptr == NULL)
+		error_exit("failed to load wall.xpm\n", g);
 	g->floor.img_ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
-		"../textures/floor.xpm", &g->floor.width, &g->floor.height);
+		FLOOR, &g->floor.width, &g->floor.height);
+	if (g->floor.img_ptr == NULL)
+		error_exit("failed to floor.xpm\n", g);
 	g->player.img_ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
-		"../textures/player.xpm", &g->player.width, &g->player.height);
+		PLAYER, &g->player.width, &g->player.height);
+	if (g->player.img_ptr == NULL)
+		error_exit("failed to load player.xpm\n", g);
 	g->col.img_ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
-		"../textures/collectible.xpm", &g->col.width, &g->col.height);
+		COL, &g->col.width, &g->col.height);
+	if (g->col.img_ptr == NULL)
+		error_exit("failed to load collect.xpm\n", g);
 	g->exit.img_ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
-		"../textures/exit.xpm", &g->exit.width, &g->exit.height);
+		EXIT, &g->exit.width, &g->exit.height);
+	if (g->exit.img_ptr == NULL)
+		error_exit("failed to load exit.xpm\n", g);
 }
 
 void	render_map(t_game *g)

@@ -6,7 +6,7 @@
 /*   By: taewonki <taewonki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 13:58:08 by taewonki          #+#    #+#             */
-/*   Updated: 2025/07/20 14:24:08 by taewonki         ###   ########.fr       */
+/*   Updated: 2025/07/23 14:34:49 by taewonki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,12 @@
 # define DOWN 65364
 # define LEFT 65361
 # define RIGHT 65363
+
+# define WALL "./textures/wall.xpm"
+# define FLOOR "./textures/floor.xpm"
+# define PLAYER "./textures/player.xpm"
+# define COL "./textures/collectible.xpm"
+# define EXIT "./textures/exit.xpm"
 
 typedef struct	s_map
 {

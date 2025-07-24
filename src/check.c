@@ -6,7 +6,7 @@
 /*   By: taewonki <taewonki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 14:28:18 by taewonki          #+#    #+#             */
-/*   Updated: 2025/07/20 14:57:17 by taewonki         ###   ########.fr       */
+/*   Updated: 2025/07/23 14:06:24 by taewonki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,18 @@ int	read_map(int map_fd, t_map *map)
 
 	if (map_fd < 0 || !map)
 		return (-1);
+	int i = 0;
 	while ((line = get_next_line(map_fd)) != NULL)
 	{
 		width = ft_strlen_gnl(line);
+		ft_printf("line %d is read!\n", i);
 		if (map->height == 0)
 			map->width = width;
 		if (width == 0)
 			return (free(line), free_grid(map->grid), -1);
 		if (map->width != width)
 			return (free(line), free_grid(map->grid), -1);
+		i++;
 		add_line_to_grid(map, line);
 	}
 	if (map->height == 0)

@@ -6,12 +6,12 @@
 #    By: taewonki <taewonki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/20 13:56:48 by taewonki          #+#    #+#              #
-#    Updated: 2025/07/20 14:26:55 by taewonki         ###   ########.fr        #
+#    Updated: 2025/07/23 12:59:37 by taewonki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -Iincludes -I$(FT_PRINTF_DIR) -I$(FT_LIBFT_DIR) -I$(GNL_DIR) -I$(MLX_DIR)
+CFLAGS = -Wall -Werror -Wextra -g -Iincludes -I$(FT_PRINTF_DIR) -I$(FT_LIBFT_DIR) -I$(GNL_DIR) -I$(MLX_DIR)
 LFLAGS = -L$(MLX_DIR) -lmlx -L/usr/lib -lXext -lX11 -lm
 
 SRC_DIR = src
