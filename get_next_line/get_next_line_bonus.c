@@ -6,7 +6,7 @@
 /*   By: taewonki <taewonki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 16:10:26 by taewonki          #+#    #+#             */
-/*   Updated: 2025/06/04 08:39:14 by taewonki         ###   ########.fr       */
+/*   Updated: 2025/07/27 14:28:49 by taewonki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,10 @@ static int	trimming_static(char **stash, char *line)
 	return (1);
 }
 
-static void	free_all(char **stash, char **line)
+static void	free_all(char **stash, char **line, int fd)
 {
+	int	i;
+
 	if (stash && *stash)
 	{
 		free(*stash);
@@ -64,6 +66,19 @@ static void	free_all(char **stash, char **line)
 	}
 	if (line && *line)
 		free(*line);
+	if (fd == GNL_FREE_ALL)
+	{
+		i = 0;
+		while (i < 1024)
+		{
+			if (stash[i])
+			{
+				free(stash[i]);
+				stash[i] = NULL;
+			}
+			i++;
+		}
+	}
 }
 
 static int	save_static(int fd, char **stash, char *buf)
@@ -99,24 +114,21 @@ char	*get_next_line(int fd)
 	char		*buf;
 	char		*line;
 	int			read_byte;
+	int			i;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
+	if (fd == GNL_FREE_ALL)
+		return (free_all(stash, NULL, GNL_FREE_ALL), NULL);
 	buf = malloc(BUFFER_SIZE + 1);
 	if (!buf)
 		return (NULL);
 	read_byte = save_static(fd, &stash[fd], buf);
 	free(buf);
 	if (read_byte == -1 || !stash[fd] || stash[fd][0] == '\0')
-	{
-		free_all(&stash[fd], NULL);
-		return (NULL);
-	}
+		return (free_all(&stash[fd], NULL, 0), NULL);
 	line = extract_line(stash[fd]);
 	if (trimming_static(&stash[fd], line) == 0)
-	{
-		free_all(&stash[fd], &line);
-		return (NULL);
-	}
+		return (free_all(&stash[fd], &line, 0), NULL);
 	return (line);
 }

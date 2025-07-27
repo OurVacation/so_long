@@ -6,7 +6,7 @@
 /*   By: taewonki <taewonki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 10:49:26 by taewonki          #+#    #+#             */
-/*   Updated: 2025/07/09 10:49:29 by taewonki         ###   ########.fr       */
+/*   Updated: 2025/07/27 13:39:13 by taewonki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,6 @@
 #  define BUFFER_SIZE 100
 # endif
 
-char		*get_next_line(int fd);
+char	*get_next_line(int fd);
 
 #endif

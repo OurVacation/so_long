@@ -6,7 +6,7 @@
 /*   By: taewonki <taewonki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 13:11:53 by taewonki          #+#    #+#             */
-/*   Updated: 2025/07/20 14:24:45 by taewonki         ###   ########.fr       */
+/*   Updated: 2025/07/27 14:30:30 by taewonki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	init_visited(t_map *map)
 		x = 0;
 		visited[y] = ft_calloc(map->width, sizeof(int));
 		if (!visited[y])
-			return (free_visited(map->visited, y), -1);
+			return (free_visited(&map->visited, y), -1);
 		while (x < map->width)
 		{
 			if (map->grid[y][x] == '1')
@@ -61,24 +61,23 @@ int	add_line_to_grid(t_map *maps, char *new_line)
 	int		i;
 
 	if (!maps || !new_line)
-		return (0);
+		return (-1);
 	new_grid = malloc(sizeof(char *) * (maps->height + 2));
 	if (!new_grid)
-		return (free_grid(maps->grid), free(new_line), 0);
-	i = 0;
+		return (free_grid(&maps->grid), -1);
+	i = -1;
 	if (maps->grid)
 	{
-		while (maps->grid[i])
-		{
+		while (maps->grid[++i])
 			new_grid[i] = maps->grid[i];
-			i++;
-		}
+		new_grid[i] = new_line;
 	}
-	new_grid[i] = new_line;
+	else
+		new_grid[++i] = new_line;
 	new_grid[i + 1] = NULL;
+	maps->height++;
 	if (maps->grid)
 		free(maps->grid);
-	maps->height++;
 	maps->grid = new_grid;
-	return (0);
+	return (1);
 }

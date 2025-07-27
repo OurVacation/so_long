@@ -6,7 +6,7 @@
 /*   By: taewonki <taewonki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 15:57:58 by taewonki          #+#    #+#             */
-/*   Updated: 2025/07/23 14:05:12 by taewonki         ###   ########.fr       */
+/*   Updated: 2025/07/26 16:32:51 by taewonki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	init_game_info(t_game *g);
 void	render_map(t_game *g);
-void	move_player(t_game *g, int x, int y);
+int		move_player(t_game *g, int x, int y);
 int		key_press_handler(int key, t_game *g);
 int		exit_hook(t_game *g);
 
@@ -28,25 +28,21 @@ void	init_game_info(t_game *g)
 	if (g->win_ptr == NULL)
 		error_exit("mlx_new_window() failed\n", g);
 	g->move_cnt = 0;
-	g->wall.img_ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
+	g->wall.ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
 		WALL, &g->wall.width, &g->wall.height);
-	if (g->wall.img_ptr == NULL)
-		error_exit("failed to load wall.xpm\n", g);
-	g->floor.img_ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
+	g->floor.ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
 		FLOOR, &g->floor.width, &g->floor.height);
-	if (g->floor.img_ptr == NULL)
-		error_exit("failed to floor.xpm\n", g);
-	g->player.img_ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
+	g->player.ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
 		PLAYER, &g->player.width, &g->player.height);
-	if (g->player.img_ptr == NULL)
+	if (g->player.ptr == NULL)
 		error_exit("failed to load player.xpm\n", g);
-	g->col.img_ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
+	g->col.ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
 		COL, &g->col.width, &g->col.height);
-	if (g->col.img_ptr == NULL)
+	if (g->col.ptr == NULL)
 		error_exit("failed to load collect.xpm\n", g);
-	g->exit.img_ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
+	g->exit.ptr = mlx_xpm_file_to_image(g->mlx_ptr, \
 		EXIT, &g->exit.width, &g->exit.height);
-	if (g->exit.img_ptr == NULL)
+	if (g->exit.ptr == NULL)
 		error_exit("failed to load exit.xpm\n", g);
 }
 
@@ -61,29 +57,22 @@ void	render_map(t_game *g)
 		x = 0;
 		while (x < g->map.width)
 		{
-			mlx_put_image_to_window(g->mlx_ptr, g->win_ptr, g->floor.img_ptr, x * 64, y * 64);
-			if (g->map.grid[y][x] == '1')
-				mlx_put_image_to_window(g->mlx_ptr, g->win_ptr, g->wall.img_ptr, x * 64, y * 64);
-			else if (g->map.grid[y][x] == 'C')
-				mlx_put_image_to_window(g->mlx_ptr, g->win_ptr, g->col.img_ptr, x * 64, y * 64);
-			else if (g->map.grid[y][x] == 'E')
-				mlx_put_image_to_window(g->mlx_ptr, g->win_ptr, g->exit.img_ptr, x * 64, y * 64);
-			else if (g->map.grid[y][x] == 'P')
-				mlx_put_image_to_window(g->mlx_ptr, g->win_ptr, g->player.img_ptr, x * 64, y * 64);
+			put_image_helper(g, x, y);
 			x++;
 		}
 		y++;
 	}
 }
-void	move_player(t_game *g, int x, int y)
+
+int	move_player(t_game *g, int x, int y)
 {
 	char	move_to;
 
 	if (x < 0 || x > g->map.width || y < 0 || y > g->map.height)
-		return ;
+		return (-1);
 	move_to = g->map.grid[y][x];
 	if (move_to == '1')
-		return ;
+		return (-1);
 	g->move_cnt++;
 	ft_printf("Moves : %d\n", g->move_cnt);
 	if (move_to == 'C')
@@ -92,22 +81,14 @@ void	move_player(t_game *g, int x, int y)
 		g->map.grid[y][x] = '0';
 	}
 	if (move_to == 'E')
-	{
-		if (g->map.c_count == 0)
-		{
-			ft_printf("You win!\n");
-			ft_all_clean(g);
-			exit(0);
-		}
-		else
-			return ;
-	}
+		return (reach_exit(g), 1);
 	g->map.grid[g->map.player_y][g->map.player_x] = '0';
 	g->map.player_x = x;
 	g->map.player_y = y;
 	g->map.grid[y][x] = 'P';
-	render_map(g);
+	return (render_map(g), 1);
 }
+
 int	key_press_handler(int key, t_game *g)
 {
 	if (key == ESC || key == Q)

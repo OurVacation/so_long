@@ -6,7 +6,7 @@
 /*   By: taewonki <taewonki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 11:16:12 by taewonki          #+#    #+#             */
-/*   Updated: 2025/07/23 14:20:29 by taewonki         ###   ########.fr       */
+/*   Updated: 2025/07/27 11:55:04 by taewonki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 
 void	error_exit(char *error_msg, t_game *g);
 void	ft_all_clean(t_game *g);
-void	free_grid(char **grid);
-void	free_visited(int **visited, int height);
+void	free_grid(char ***grid);
+void	free_visited(int ***visited, int height);
 
 void	error_exit(char *error_msg, t_game *g)
 {
-	printf("error_exit() start\n");
 	if (g)
 	{
 		ft_printf("%s", error_msg);
@@ -30,66 +29,62 @@ void	error_exit(char *error_msg, t_game *g)
 
 void	ft_all_clean(t_game *g)
 {
-	printf("ft_all_clean() start\n");
 	if (g)
 	{
-		printf("wall img destroy\n");
-		if (g->wall.img_ptr && g->mlx_ptr)
-			mlx_destroy_image(g->mlx_ptr, g->wall.img_ptr);
-		printf("floor img destroy\n");
-		if (g->floor.img_ptr && g->mlx_ptr)
-			mlx_destroy_image(g->mlx_ptr, g->floor.img_ptr);
-		printf("player img destroy\n");
-		if (g->player.img_ptr && g->mlx_ptr)
-			mlx_destroy_image(g->mlx_ptr, g->player.img_ptr);
-		printf("collective img destroy\n");
-		if (g->col.img_ptr && g->mlx_ptr)
-			mlx_destroy_image(g->mlx_ptr, g->col.img_ptr);
-		printf("exit img destroy\n");
-		if (g->exit.img_ptr && g->mlx_ptr)
-			mlx_destroy_image(g->mlx_ptr, g->exit.img_ptr);
-		printf("win_ptr destroy\n");
+		if (g->wall.ptr && g->mlx_ptr)
+			mlx_destroy_image(g->mlx_ptr, g->wall.ptr);
+		if (g->floor.ptr && g->mlx_ptr)
+			mlx_destroy_image(g->mlx_ptr, g->floor.ptr);
+		if (g->player.ptr && g->mlx_ptr)
+			mlx_destroy_image(g->mlx_ptr, g->player.ptr);
+		if (g->col.ptr && g->mlx_ptr)
+			mlx_destroy_image(g->mlx_ptr, g->col.ptr);
+		if (g->exit.ptr && g->mlx_ptr)
+			mlx_destroy_image(g->mlx_ptr, g->exit.ptr);
 		if (g->win_ptr && g->mlx_ptr)
 			mlx_destroy_window(g->mlx_ptr, g->win_ptr);
-		printf("mlx_ptr destroy\n");
 		if (g->mlx_ptr)
 			mlx_destroy_display(g->mlx_ptr);
-		printf("free_grid()\n");
-		if (g->map.grid)
-			free_grid(g->map.grid);
-		printf("free_visited()\n");
-		if (g->map.visited)
-			free_visited(g->map.visited, g->map.height);
+		if (g->map.grid != NULL)
+			free_grid(&g->map.grid);
+		if (g->map.visited != NULL)
+			free_visited(&g->map.visited, g->map.height);
 	}
 }
 
-void	free_grid(char **grid)
+void	free_grid(char ***grid)
 {
-	int	i;
+	int		i;
+	char	**grid_temp;
 
-	if (!grid)
+	if (!grid || !*grid)
 		return ;
 	i = 0;
-	while (grid[i])
+	grid_temp = *grid;
+	while (grid_temp[i])
 	{
-		free(grid[i]);
+		free(grid_temp[i]);
 		i++;
 	}
-	free(grid);
+	free(grid_temp);
+	*grid = NULL;
 }
 
-void	free_visited(int **visited, int height)
+void	free_visited(int ***visited, int height)
 {
 	int	i;
+	int	**visited_temp;
 
-	if (!visited)
+	if (!visited || !*visited)
 		return ;
 	i = 0;
+	visited_temp = *visited;
 	while (i < height)
 	{
-		if (visited[i])
-			free(visited[i]);
+		if (visited_temp[i])
+			free(visited_temp[i]);
 		i++;
 	}
-	free(visited);
+	free(visited_temp);
+	*visited = NULL;
 }
